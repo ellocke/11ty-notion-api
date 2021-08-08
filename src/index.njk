@@ -1,0 +1,48 @@
+---
+siteTitle: Eleventy Minimal Data Test
+images:
+  - ???.jpg
+  - ….jpg
+  - parrot.gif
+---
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <title>{{ siteTitle }}</title>
+ </head>
+ <body>
+ 	<blockquote>
+     Articles: {{ articles.length | safe }}
+  </blockquote>
+
+  {% for article in articles %}
+  <section>
+    <h2>Title: {{ article.title }}</h2>
+    <h3>Subtitle: {{ article.subtitle }}</h3>
+    <blockquote><span>Date: {{ article.authors }}</span> - <span>Authors: {{ article.date }}</span></blockquote>
+    
+    {% for block in article.body %}
+      {% switch block.block_type %}
+
+        {% case "heading_1" %}
+          <h4>{{ block.text }}</h4>
+        {% case "heading_2" %}
+          <h5>{{ block.text }}</h5>
+        {% case "heading_3" %}
+          <h6>{{ block.text }}</h6>
+        {% case "paragraph" %}
+          <p>{{ block.text }}</p>
+        {% default %}
+          <em>(Type: {{ block.block_type }})</em>
+          <ul><li><i>{{ block.text }}</i></li></ul>
+          
+      {% endswitch %}
+    {% endfor %}
+
+  </section>
+  <hr>
+  {% endfor %}
+
+ </body>
+</html>
