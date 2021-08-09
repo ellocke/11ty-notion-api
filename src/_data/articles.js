@@ -5,6 +5,8 @@ const {
 } = require("@11ty/eleventy-cache-assets");
 const fs = require('fs');
 
+const classNames = require("classnames");
+
 const {
   Client,
   LogLevel
@@ -92,11 +94,10 @@ const parseBlock = (block) => {
       });
     })
 
-  // console.log(block)
-
   return {
     block_type: block.type || "error",
     text: isValid ? block[block.type].text.map(entry => entry.plain_text) : "error",
+    parsedText: isValid ? block[block.type].text.map(entry => parseText(entry)).flat() : "error",
     annotations: annotations || false,
     children: block.has_children ? block.children : false,
     raw_content: block[block.type] || "error",
@@ -105,6 +106,53 @@ const parseBlock = (block) => {
 }
 
 
+const colorMapper = {
+  default: false,
+  yellow: "yellow",
+  gray: "gray",
+  brown: "brown",
+  orange: "orange",
+  green: "green",
+  blue: "blue",
+  purple: "purple",
+  red: "red"
+};
+
+const parseText = function (block) {
+
+  // console.log(block);
+
+  if (!block) {
+    return null;
+  }
+
+  const hasAttributes = Object.values(block.annotations).some(val => val === true)
+
+  if (hasAttributes) {
+    const {
+      bold,
+      code,
+      color,
+      italic,
+      strikethrough,
+      underline
+    } = block.annotations;
+
+    return `<span class='${classNames(colorMapper[color], {
+          "font-bold": bold,
+          italic: italic,
+          "line-through": strikethrough,
+          underline: underline,
+          "code": code
+        })}'>${block.text.content}</span>`;
+  } else {
+    return block.text.content
+  }
+
+
+}
+
+/** optional local JSON file output  */
 // const writeJSON = (json) => {
 
 //   if (!fs.existsSync("json")) {
@@ -125,10 +173,10 @@ module.exports = async function () {
 
   let asset = new AssetCache("notion_posts");
 
-  if (asset.isCacheValid("1h")) {
-    // return cached data.
-    return asset.getCachedValue(); // a promise
-  }
+  // if (asset.isCacheValid("1h")) {
+  //   // return cached data.
+  //   return asset.getCachedValue(); // a promise
+  // }
 
   result.then(resolved => asset.save(resolved, "json"))
 
