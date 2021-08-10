@@ -15,8 +15,9 @@ Proof-of-concept for fetching pages / blocks from Notion (via official [Notion A
 ## TODO
 
 - [x] figure out how to wrap the parent-less list items in `<ul></ul>`
-- [ ] implement shortcodes for
-  - [ ] `[blockquote]`
-  - [ ] `[img]`
-  - [ ] `[footnote]` (as `<sup></sup>`)
+- [x] implement shortcodes for
+  - [x] `[blockquote 'payload']`
+  - [x] `[img 'url' 'figcaption']`
+  - [x] `[footnote 'payload']` (as `<sup></sup>`)
+- [x] add formatting for Headings
 - [ ] figure out how to enable CSS edge cases such as `text-decoration: underline line-through`

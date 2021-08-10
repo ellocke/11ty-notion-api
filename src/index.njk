@@ -79,45 +79,47 @@ siteTitle: 11ty & Notion Minimal Data Test
 
       {% switch block.block_type %}
         {% case "heading_1" %}
-          <h2>{{- block.parsedText | safe -}}</h2>
+          <h2>{% for elem in block.parsedText %}
+          {{- elem | safe -}}
+          {% endfor %}</h2>
         {% case "heading_2" %}
-          <h3>{{- block.parsedText | safe -}}</h3>
+          <h3>{% for elem in block.parsedText %}
+          {{- elem | safe -}}
+          {% endfor %}</h3>
         {% case "heading_3" %}
-          <h4>{{- block.parsedText | safe -}}</h4>
+          <h4>{% for elem in block.parsedText %}
+          {{- elem | safe -}}
+          {% endfor %}</h4>
         {% case "paragraph" %}
           <p>{% for elem in block.parsedText %}
           {{- elem | safe -}}
           {% endfor %}</p>
         {% case "bulleted_list_item" %}
-          {# <ul> #}
             {% if listItemCounter == 0 %}
               <ul>
             {% endif %}
             {% set listItemCounter = listItemCounter + 1 %}
                 <li>{% for elem in block.parsedText %}
                       {{- elem | safe -}}
-                      {% endfor %}
-                </li>
+                    {% endfor %}</li>
             {% if block.next_block_type != "bulleted_list_item" %}
               {% set listItemCounter = 0 %}
               </ul>
             {% endif %}
         {% case "numbered_list_item" %}
-          {# <ul> #}
             {% if listItemCounter == 0 %}
               <ol>
             {% endif %}
             {% set listItemCounter = listItemCounter + 1 %}
                 <li>{% for elem in block.parsedText %}
                       {{- elem | safe -}}
-                      {% endfor %}
-                </li>
+                      {% endfor %}</li>
             {% if block.next_block_type != "numbered_list_item" %}
               {% set listItemCounter = 0 %}
               </ol>
             {% endif %}
         {% default %}
-          <em>(Default Case - Type: {{- block.block_type -}})</em>
+          <em>(ERROR - Uncaught Case - Type: {{- block.block_type -}})</em>
           {% for elem in block.parsedText %}
             <div>{{- elem | safe -}}</div>
           {% endfor %}          

@@ -119,7 +119,7 @@ const parseBlock = (block, nextType) => {
     parsedText: isValid ? block[block.type].text.map(entry => parseText(entry)).flat() : "[ERROR]",
     annotations: annotations || false,
     children: block.has_children ? block.children : false,
-    next_block_type: nextType || false
+    next_block_type: nextType || false,
     // raw_content: block[block.type] || "[ERROR]",
     // rest: block
   }
@@ -127,13 +127,14 @@ const parseBlock = (block, nextType) => {
 
 const colorMapper = {
   default: false,
-  yellow: "yellow",
   gray: "gray",
   brown: "brown",
   orange: "orange",
+  yellow: "yellow",
   green: "green",
   blue: "blue",
   purple: "purple",
+  pink: "pink",
   red: "red"
 };
 
@@ -145,14 +146,18 @@ const parseText = function (block) {
     return null;
   }
 
-  const hasAttributes = Object.values(block.annotations).some(val => val === true)
-  const isShortcode = block.annotations.code
+  const hasAttributes = block.annotations.color !== "default" || Object.values(block.annotations).some(val => val === true)
+  const isShortcode = block.annotations.code && block.text.content.match(/^\[/) ? true : false
   const isLinked = block.href ? true : false
   const innerText = isLinked ?
     `<a href='${block.text.link.url}' target='_blank' rel='noopener noreferrer'>${block.text.content}</a>` :
     block.text.content
 
-  // console.log(isShortcode)
+  console.log(hasAttributes, block.text.content, block.annotations.color)
+
+  if (isShortcode) {
+    return parseShortcode(block.text.content)
+  }
 
   if (hasAttributes) {
     const {
@@ -176,6 +181,22 @@ const parseText = function (block) {
 
 }
 
+const parseShortcode = (block) => {
+  // const shortcodeType = block.match(/\[(.*)\s'(.*)\s?'\]/) // 2 params
+  const shortcodeType = block.match(/\[(.*?)\s'(.*?)'\s?'?(.*?)?'?\]/) // 2 params + optional 3rd for figcaption
+  // console.log(shortcodeType) // {full string, shortcode, payload, (figcaption)}
+  switch (shortcodeType[1]) {
+    case "blockquote":
+      return `<blockquote>${shortcodeType[2]}</blockquote>`;
+    case "img":
+      return `<figure><img src="${shortcodeType[2]}" alt="${shortcodeType[3]}"/><figcaption>${shortcodeType[3] || ""}</figcaption></figure>`;
+    case "footnote":
+      return `<sup>[${shortcodeType[2]}]</sup>`;
+    default:
+      return `<div class="shortcode-error">${block}</div>`;
+  }
+}
+
 /** optional local JSON file output  */
 // const writeJSON = (json) => {
 
@@ -197,9 +218,9 @@ module.exports = async function () {
 
   let asset = new AssetCache("notion_posts");
 
-  if (asset.isCacheValid("1h")) {
-    return asset.getCachedValue();
-  }
+  // if (asset.isCacheValid("1h")) {
+  //   return asset.getCachedValue(); // returns a Promise
+  // }
 
   result.then(resolved => asset.save(resolved, "json"))
 
