@@ -1,5 +1,9 @@
 # 11ty-notion-api
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/743e0288-f4c6-4ba0-9537-e74b2134cf95/deploy-status)](https://app.netlify.com/sites/11ty-notion-cms/deploys)
+
+**Current state**: [https://11ty-notion-cms.netlify.app/]()
+
 Proof-of-concept for fetching pages / blocks from Notion (via official [Notion API beta](https://developers.notion.com/changelog)) with the Eleventy static website builder's global data functionality.
 
 ![](https://pbs.twimg.com/media/E8dX4i5WUAcLcQL?format=png&name=4096x4096)
