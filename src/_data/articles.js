@@ -153,7 +153,7 @@ const parseText = function (block) {
     `<a href='${block.text.link.url}' target='_blank' rel='noopener noreferrer'>${block.text.content}</a>` :
     block.text.content
 
-  console.log(hasAttributes, block.text.content, block.annotations.color)
+  // console.log(hasAttributes, block.text.content, block.annotations.color)
 
   if (isShortcode) {
     return parseShortcode(block.text.content)
