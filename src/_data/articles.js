@@ -198,8 +198,7 @@ module.exports = async function () {
   let asset = new AssetCache("notion_posts");
 
   if (asset.isCacheValid("1h")) {
-    // return cached data.
-    return asset.getCachedValue(); // a promise
+    return asset.getCachedValue();
   }
 
   result.then(resolved => asset.save(resolved, "json"))
