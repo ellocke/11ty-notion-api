@@ -14,4 +14,5 @@ Proof-of-concept for fetching pages / blocks from Notion (via official [Notion A
 - [ ] implement shortcodes for
   - [ ] `[blockquote]`
   - [ ] `[img]`
+  - [ ] `[footnote]` (as `<sup></sup>`)
 - [ ] figure out how to enable CSS edge cases such as `text-decoration: underline line-through`
