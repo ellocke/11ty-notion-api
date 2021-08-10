@@ -1,5 +1,5 @@
 ---
-siteTitle: 11ty & Notion Minimal Data Test
+siteTitle: 11ty & Notion API (beta) as Headless CMS
 ---
 <!doctype html>
 <html lang="en">
@@ -62,8 +62,9 @@ siteTitle: 11ty & Notion Minimal Data Test
   </style>
  </head>
  <body>
+   <header><nav><h1><a href="#">{{siteTitle}}</a></h1></nav></header>
  	<blockquote>
-     Articles: {{ articles.length | safe }}
+     <a href="https://fubits.notion.site/fubits/Notion-CMS-Test-dbfab7a2a2bf476d96fb50222ff0c481">Notion Sources</a> | Articles: {{ articles.length | safe }}
   </blockquote>
 
   {% for article in articles %}
@@ -128,5 +129,6 @@ siteTitle: 11ty & Notion Minimal Data Test
   </section>
   {% endfor %}
 
+<footer><a href="https://twitter.com/fubits">@fubits</a> | <a href="https://gitlab.com/fubits/11ty-notion-api">Gitlab</a> | <a href="https://kimeiga.github.io/bahunya/">Bahunya CSS</a></footer>
  </body>
 </html>

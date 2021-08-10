@@ -8,6 +8,7 @@ Proof-of-concept for fetching pages / blocks from Notion (via official [Notion A
 
 ![](https://pbs.twimg.com/media/E8dX4i5WUAcLcQL?format=png&name=4096x4096)
 
+> See the [Notion Source Documents](https://fubits.notion.site/fubits/Notion-CMS-Test-dbfab7a2a2bf476d96fb50222ff0c481)
 ## Quickstart
 
 - `npm install`
