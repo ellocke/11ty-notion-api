@@ -8,6 +8,13 @@ siteTitle: 11ty & Notion Minimal Data Test
   <title>{{ siteTitle }}</title>
   <link rel="stylesheet" href="https://cdn.rawgit.com/kimeiga/bahunya/css/bahunya-0.1.3.css"/>
   <style>
+
+    /** just for bahunya */
+    body {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
     .font-bold {
       font-weight: 700;
     }
@@ -17,6 +24,10 @@ siteTitle: 11ty & Notion Minimal Data Test
 
     .underline {
       text-decoration: underline;
+    }
+
+    .line-through {
+      text-decoration: line-through;
     }
 
     .code {
@@ -56,43 +67,63 @@ siteTitle: 11ty & Notion Minimal Data Test
   </blockquote>
 
   {% for article in articles %}
+  <hr>
   <section>
-    <h2>Title: {{ article.title }}</h2>
+    <h1>Title: {{ article.title }}</h1>
     <h3>Subtitle: {{ article.subtitle }}</h3>
     <blockquote><span>Date: {{ article.authors }}</span> - <span>Authors: {{ article.date }}</span></blockquote>
+
+    {% set listItemCounter = 0 %}
     
     {% for block in article.body %}
-      {% switch block.block_type %}
 
+      {% switch block.block_type %}
         {% case "heading_1" %}
-          <h4>{{- block.parsedText | safe -}}</h4>
+          <h2>{{- block.parsedText | safe -}}</h2>
         {% case "heading_2" %}
-          <h5>{{- block.parsedText | safe -}}</h5>
+          <h3>{{- block.parsedText | safe -}}</h3>
         {% case "heading_3" %}
-          <h6>{{- block.parsedText | safe -}}</h6>
+          <h4>{{- block.parsedText | safe -}}</h4>
         {% case "paragraph" %}
           <p>{% for elem in block.parsedText %}
           {{- elem | safe -}}
           {% endfor %}</p>
+        {% case "bulleted_list_item" %}
+          {# <ul> #}
+            {% if listItemCounter == 0 %}
+              <ul>
+            {% endif %}
+            {% set listItemCounter = listItemCounter + 1 %}
+                <li>{% for elem in block.parsedText %}
+                      {{- elem | safe -}}
+                      {% endfor %}
+                </li>
+            {% if block.next_block_type != "bulleted_list_item" %}
+              {% set listItemCounter = 0 %}
+              </ul>
+            {% endif %}
+        {% case "numbered_list_item" %}
+          {# <ul> #}
+            {% if listItemCounter == 0 %}
+              <ol>
+            {% endif %}
+            {% set listItemCounter = listItemCounter + 1 %}
+                <li>{% for elem in block.parsedText %}
+                      {{- elem | safe -}}
+                      {% endfor %}
+                </li>
+            {% if block.next_block_type != "numbered_list_item" %}
+              {% set listItemCounter = 0 %}
+              </ol>
+            {% endif %}
         {% default %}
           <em>(Default Case - Type: {{- block.block_type -}})</em>
-          {% if block.block_type == "bulleted_list_item" %}
-          <ul>
-            <li>{% for elem in block.parsedText %}
-                  {{- elem | safe -}}
-                  {% endfor %}</li>
-          </ul>
-          {% else %}
           {% for elem in block.parsedText %}
-                  {{- elem | safe -}}
-                  {% endfor %}
-          {% endif %}
-          
+            <div>{{- elem | safe -}}</div>
+          {% endfor %}          
       {% endswitch %}
     {% endfor %}
-
   </section>
-  <hr>
   {% endfor %}
 
  </body>

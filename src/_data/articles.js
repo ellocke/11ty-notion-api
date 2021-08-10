@@ -1,15 +1,23 @@
 require("dotenv").config();
+
+/** Eleventy's asset caching
+ * will check if cached assets (the payload from Notion)
+ * is older than [1 hour] and either return the locally cached json file or
+ * re-fetch
+ */
+
 const {
   Cache,
   AssetCache
 } = require("@11ty/eleventy-cache-assets");
 const fs = require('fs');
 
+// helper npm package to compose the CSS class array based on {bool: true}
 const classNames = require("classnames");
 
 const {
   Client,
-  LogLevel
+  LogLevel // optional local debugger
 } = require("@notionhq/client");
 
 const notion = new Client({
@@ -33,25 +41,32 @@ const result = (async () => {
   )
 
   // console.dir(blocks_parsed)
-  // writeJSON(blocks_parsed)
+  // writeJSON(blocks_parsed) // optional: local copy of parsed JSON
 
   return blocks_parsed
-})();
+})(); // IIFE
 
 const parsePage = async (page) => {
 
-
-  console.log("single page: ", page.child_page.title)
+  console.log("Page: ", page.child_page.title)
 
   let blocks = await notion.blocks.children.list({
     block_id: page.id,
-    page_size: 50,
-  }).then(response => response)
+    page_size: 50, // TBC: how to set unlimited?
+  })
 
   // console.log("blocks: ")
   // console.dir(blocks.results)
+  let blocksLength = blocks.results.length
+  // console.log("length: ", blocksLength)
 
-  let blocksBody = blocks.results.map(block => parseBlock(block))
+  let blocksBody = blocks.results
+    .map((block, index) => {
+      // look up next block type (i.e. for a pointer for <ul>)
+      let nextType = index < (blocksLength - 1) ? blocks.results[index + 1].type : false
+      return parseBlock(block, nextType)
+    })
+    .filter(block => block.text !== "[ERROR]")
 
   // console.log(blocksBody)
 
@@ -62,18 +77,20 @@ const parsePage = async (page) => {
     heroAltDescription: "tbd",
     authors: ["tbd"],
     date: "tbd",
-    body: blocksBody.filter(block => block.text !== "error"),
+    body: blocksBody,
     // raw_page: page
   }
 };
 
-const parseBlock = (block) => {
+const parseBlock = (block, nextType) => {
+
   if (block.object !== "block") {
     return {
-      type: "error"
+      type: `[ERROR] - block type: ${block.object}`
     }
   }
 
+  // drop empty object entries
   Object.keys(block).forEach(function (key) {
     if (block[key] === false) {
       delete block[key];
@@ -81,6 +98,8 @@ const parseBlock = (block) => {
   });
 
   const isValid = block[block.type].text && block[block.type].text.length
+
+  // isValid && console.log(block.type, nextType)
 
   const annotations = isValid && block[block.type].text
     .map(entry => Object.assign({}, entry.annotations)) || false
@@ -95,16 +114,16 @@ const parseBlock = (block) => {
     })
 
   return {
-    block_type: block.type || "error",
-    text: isValid ? block[block.type].text.map(entry => entry.plain_text) : "error",
-    parsedText: isValid ? block[block.type].text.map(entry => parseText(entry)).flat() : "error",
+    block_type: block.type || "[ERROR",
+    text: isValid ? block[block.type].text.map(entry => entry.plain_text) : "[ERROR]",
+    parsedText: isValid ? block[block.type].text.map(entry => parseText(entry)).flat() : "[ERROR]",
     annotations: annotations || false,
     children: block.has_children ? block.children : false,
-    raw_content: block[block.type] || "error",
+    next_block_type: nextType || false
+    // raw_content: block[block.type] || "[ERROR]",
     // rest: block
   }
 }
-
 
 const colorMapper = {
   default: false,
@@ -127,6 +146,13 @@ const parseText = function (block) {
   }
 
   const hasAttributes = Object.values(block.annotations).some(val => val === true)
+  const isShortcode = block.annotations.code
+  const isLinked = block.href ? true : false
+  const innerText = isLinked ?
+    `<a href='${block.text.link.url}' target='_blank' rel='noopener noreferrer'>${block.text.content}</a>` :
+    block.text.content
+
+  // console.log(isShortcode)
 
   if (hasAttributes) {
     const {
@@ -139,16 +165,14 @@ const parseText = function (block) {
     } = block.annotations;
 
     return `<span class='${classNames(colorMapper[color], {
-          "font-bold": bold,
+          'font-bold': bold,
           italic: italic,
-          "line-through": strikethrough,
+          'line-through': strikethrough,
           underline: underline,
-          "code": code
-        })}'>${block.text.content}</span>`;
+          'code': code})}'>${innerText}</span>`;
   } else {
-    return block.text.content
+    return innerText
   }
-
 
 }
 
@@ -173,10 +197,10 @@ module.exports = async function () {
 
   let asset = new AssetCache("notion_posts");
 
-  // if (asset.isCacheValid("1h")) {
-  //   // return cached data.
-  //   return asset.getCachedValue(); // a promise
-  // }
+  if (asset.isCacheValid("1h")) {
+    // return cached data.
+    return asset.getCachedValue(); // a promise
+  }
 
   result.then(resolved => asset.save(resolved, "json"))
 
