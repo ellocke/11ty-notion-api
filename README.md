@@ -10,8 +10,8 @@ Proof-of-concept for fetching pages / blocks from Notion (via official [Notion A
 
 # TODO
 
-[x] figure out how to wrap the parent-less list items in `<ul></ul>`
-[ ] implement shortcodes for
-  [ ] `[blockquote]`
-  [ ] `[img]`
-[ ] figure out how to enable CSS edge cases such as `text-decoration: underline line-through`
+- [x] figure out how to wrap the parent-less list items in `<ul></ul>`
+- [ ] implement shortcodes for
+  - [ ] `[blockquote]`
+  - [ ] `[img]`
+- [ ] figure out how to enable CSS edge cases such as `text-decoration: underline line-through`
