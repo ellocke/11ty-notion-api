@@ -183,8 +183,8 @@ const parseText = function (block) {
 
 const parseShortcode = (block) => {
   // const shortcodeType = block.match(/\[(.*)\s'(.*)\s?'\]/) // 2 params
-  const shortcodeType = block.match(/\[(.*?)\s'(.*?)'\s?'?(.*?)?'?\]/) // 2 params + optional 3rd for figcaption
-  // console.log(shortcodeType) // {full string, shortcode, payload, (figcaption)}
+  const shortcodeType = block.match(/\[(.*?)\s'(.*?)'\s?'?(.*?)?'?\]/) // 2 params + optional 3rd i.e. for figcaption
+  // console.log(shortcodeType) // [full string, shortcode, payload, (figcaption)]
   switch (shortcodeType[1]) {
     case "blockquote":
       return `<blockquote>${shortcodeType[2]}</blockquote>`;
@@ -192,6 +192,9 @@ const parseShortcode = (block) => {
       return `<figure><img src="${shortcodeType[2]}" alt="${shortcodeType[3]}"/><figcaption>${shortcodeType[3] || ""}</figcaption></figure>`;
     case "footnote":
       return `<sup>[${shortcodeType[2]}]</sup>`;
+    case "youtube":
+      return `<figure class="youtube-wrapper"><iframe class="youtube" src="https://www.youtube-nocookie.com/embed/${shortcodeType[2]}" frameborder="0"></iframe>
+      <figcaption>${shortcodeType[3] || ""}</figcaption></figure>`;
     default:
       return `<div class="shortcode-error">${block}</div>`;
   }
@@ -218,9 +221,9 @@ module.exports = async function () {
 
   let asset = new AssetCache("notion_posts");
 
-  if (asset.isCacheValid("1h")) {
-    return asset.getCachedValue(); // returns a Promise
-  }
+  // if (asset.isCacheValid("1h")) {
+  //   return asset.getCachedValue(); // returns a Promise
+  // }
 
   result.then(resolved => asset.save(resolved, "json"))
 

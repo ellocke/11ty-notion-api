@@ -9,12 +9,24 @@ siteTitle: 11ty & Notion API (beta) as Headless CMS
   <link rel="stylesheet" href="https://cdn.rawgit.com/kimeiga/bahunya/css/bahunya-0.1.3.css"/>
   <style>
 
-    /** just for bahunya */
+    /** bahunya tweaks */
     body {
       padding-left: 1rem;
       padding-right: 1rem;
     }
-    
+
+    header nav {
+      z-index: 1;
+    }
+
+    section {
+      width: 100%;
+      position: relative;
+      max-width: 900px;
+    }
+
+    /** Notion / Eleventy specific */
+
     .font-bold {
       font-weight: 700;
     }
@@ -32,6 +44,32 @@ siteTitle: 11ty & Notion API (beta) as Headless CMS
 
     .code {
       font-family: monospace;
+    }
+
+    /** youtube responsive hack 
+    * cf. https://stackoverflow.com/a/15844571
+    */
+    figure.youtube-wrapper {
+      float: none;
+      clear: both;
+      width: 100%;
+      position: relative;
+      padding-bottom: 56.25%;
+      padding-top: 25px;
+      height: 0;
+    }
+
+    figure.youtube-wrapper iframe.youtube {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: calc(100% - 3em);
+      height: calc(100% - 3em);
+    }
+
+    figure.youtube-wrapper figcaption {
+      position: absolute;
+      bottom: 1.25rem;
     }
 
     .yellow {
@@ -54,6 +92,9 @@ siteTitle: 11ty & Notion API (beta) as Headless CMS
       }
     .purple {
       color: purple;
+      }
+    .pink {
+      color: pink;
       }
     .red {
       color: red;
@@ -96,29 +137,33 @@ siteTitle: 11ty & Notion API (beta) as Headless CMS
           {{- elem | safe -}}
           {% endfor %}</p>
         {% case "bulleted_list_item" %}
-            {% if listItemCounter == 0 %}
-              <ul>
-            {% endif %}
-            {% set listItemCounter = listItemCounter + 1 %}
-                <li>{% for elem in block.parsedText %}
-                      {{- elem | safe -}}
-                    {% endfor %}</li>
-            {% if block.next_block_type != "bulleted_list_item" %}
-              {% set listItemCounter = 0 %}
-              </ul>
-            {% endif %}
+          {% if listItemCounter == 0 %}
+            <ul>
+          {% endif %}
+          {% set listItemCounter = listItemCounter + 1 %}
+              <li>{% for elem in block.parsedText %}
+                    {{- elem | safe -}}
+                  {% endfor %}</li>
+          {% if block.next_block_type != "bulleted_list_item" %}
+            {% set listItemCounter = 0 %}
+            </ul>
+          {% endif %}
         {% case "numbered_list_item" %}
-            {% if listItemCounter == 0 %}
-              <ol>
-            {% endif %}
-            {% set listItemCounter = listItemCounter + 1 %}
-                <li>{% for elem in block.parsedText %}
-                      {{- elem | safe -}}
-                      {% endfor %}</li>
-            {% if block.next_block_type != "numbered_list_item" %}
-              {% set listItemCounter = 0 %}
-              </ol>
-            {% endif %}
+          {% if listItemCounter == 0 %}
+            <ol>
+          {% endif %}
+          {% set listItemCounter = listItemCounter + 1 %}
+              <li>{% for elem in block.parsedText %}
+                    {{- elem | safe -}}
+                    {% endfor %}</li>
+          {% if block.next_block_type != "numbered_list_item" %}
+            {% set listItemCounter = 0 %}
+            </ol>
+          {% endif %}
+        {% case "to_do"%}
+          <div>[to_do] {% for elem in block.parsedText %}
+                    {{- elem | safe -}}
+                    {% endfor %}</div>
         {% default %}
           <em>(ERROR - Uncaught Case - Type: {{- block.block_type -}})</em>
           {% for elem in block.parsedText %}
@@ -129,6 +174,6 @@ siteTitle: 11ty & Notion API (beta) as Headless CMS
   </section>
   {% endfor %}
 
-<footer><a href="https://twitter.com/fubits">@fubits</a> | <a href="https://gitlab.com/fubits/11ty-notion-api">Gitlab</a> | <a href="https://kimeiga.github.io/bahunya/">Bahunya CSS</a></footer>
+  <footer><a href="https://twitter.com/fubits">@fubits</a> | <a href="https://gitlab.com/fubits/11ty-notion-api">Gitlab</a> | <a href="https://kimeiga.github.io/bahunya/">Bahunya CSS</a></footer>
  </body>
 </html>
