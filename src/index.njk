@@ -7,7 +7,8 @@ siteTitle: 11ty & Notion API as Headless CMS
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ siteTitle }}</title>
-    <link rel="stylesheet" href="https://unpkg.com/bamboo.css/dist/dark.min.css">
+    <link rel="stylesheet" href="/css/bamboo.dark.min.css">
+    <link rel="stylesheet" href="/css/notion.css">
     <style>
 
       header {
@@ -17,30 +18,13 @@ siteTitle: 11ty & Notion API as Headless CMS
         background: var(--b-bg-1);
       }
 
-      /** Notion / Eleventy specific */
-
-      .font-bold {
-        font-weight: 700;
-      }
-      .italic {
-        font-style: italic;
+      footer {
+        text-align: center;
       }
 
-      .underline {
-        text-decoration: underline;
-      }
-
-      .line-through {
-        text-decoration: line-through;
-      }
-
-      .code {
-        font-family: monospace;
-      }
-
-      /** youtube responsive hack 
-    * cf. https://stackoverflow.com/a/15844571
-    */
+      /** youtube embed responsive hack 
+       * cf. https://stackoverflow.com/a/15844571
+       */
       figure.youtube-wrapper {
         float: none;
         clear: both;
@@ -63,34 +47,6 @@ siteTitle: 11ty & Notion API as Headless CMS
       figure.youtube-wrapper figcaption {
         position: absolute;
         bottom: -2rem;
-      }
-
-      .yellow {
-        color: yellow;
-      }
-      .gray {
-        color: gray;
-      }
-      .brown {
-        color: brown;
-      }
-      .orange {
-        color: orange;
-      }
-      .green {
-        color: green;
-      }
-      .blue {
-        color: blue;
-      }
-      .purple {
-        color: purple;
-      }
-      .pink {
-        color: pink;
-      }
-      .red {
-        color: red;
       }
     </style>
   </head>

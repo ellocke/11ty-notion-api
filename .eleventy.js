@@ -1,5 +1,7 @@
+module.exports = function (eleventyConfig) {
 
-module.exports = function (config) {
+  eleventyConfig.addPassthroughCopy("./src/css/*.*");
+  eleventyConfig.addPassthroughCopy("./src/favicon.ico");
 
   return {
     htmlTemplateEngine: "njk",
