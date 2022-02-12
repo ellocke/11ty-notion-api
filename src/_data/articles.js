@@ -27,43 +27,42 @@ const notion = new Client({
 
 const result = (async () => {
   const pageId = process.env.MAIN_PAGE;
+  const response = await fetchBlocks(pageId);
+  // console.log("main pages: ", response.results);
+  let pages_parsed = await Promise.all(response.results
+    // check if entry is a child page and skip empty blocks etc.
+    .filter(page => page.type === "child_page")
+    .map(async (page) => parsePage(page))
+  )
+  // console.dir(pages_parsed)
+  writeJSON(pages_parsed) // optional: local copy of parsed JSON
+  return pages_parsed
+})(); // IIFE
 
+// async function to fetch all blocks from a page
+async function fetchBlocks(pageId) {
   const response = await notion.blocks.children.list({
     block_id: pageId,
     page_size: 50,
   });
-
-  // console.log("main pages: ", response.results);
-
-  let blocks_parsed = await Promise.all(response.results
-    .map(async (page) =>
-      parsePage(page))
-  )
-
-  // console.dir(blocks_parsed)
-  // writeJSON(blocks_parsed) // optional: local copy of parsed JSON
-
-  return blocks_parsed
-})(); // IIFE
+  return response;
+}
 
 const parsePage = async (page) => {
 
+  // console.log(Object.keys(page))
   console.log("Page: ", page.child_page.title)
 
-  let blocks = await notion.blocks.children.list({
-    block_id: page.id,
-    page_size: 50, // TBC: how to set unlimited?
-  })
+  let blocks = await fetchBlocks(page.id);
 
-  // console.log("blocks: ")
-  // console.dir(blocks.results)
   let blocksLength = blocks.results.length
-  // console.log("length: ", blocksLength)
 
   let blocksBody = blocks.results
     .map((block, index) => {
-      // look up next block type (i.e. for a pointer for <ul>)
-      let nextType = index < (blocksLength - 1) ? blocks.results[index + 1].type : false
+      // look up next block type (i.e. as a pointer for <ul></ul>)
+      let nextType = index < (blocksLength - 1) ?
+        blocks.results[index + 1].type :
+        false
       return parseBlock(block, nextType)
     })
     .filter(block => block.text !== "[ERROR]")
@@ -104,6 +103,7 @@ const parseBlock = (block, nextType) => {
   const annotations = isValid && block[block.type].text
     .map(entry => Object.assign({}, entry.annotations)) || false
 
+  // Collect block styling / text decoration attributes
   annotations && annotations
     .forEach(anno => {
       Object.keys(anno).forEach(function (key) {
@@ -114,7 +114,7 @@ const parseBlock = (block, nextType) => {
     })
 
   return {
-    block_type: block.type || "[ERROR",
+    block_type: block.type || "[ERROR]",
     text: isValid ? block[block.type].text.map(entry => entry.plain_text) : "[ERROR]",
     parsedText: isValid ? block[block.type].text.map(entry => parseText(entry)).flat() : "[ERROR]",
     annotations: annotations || false,
@@ -201,20 +201,20 @@ const parseShortcode = (block) => {
 }
 
 /** optional local JSON file output  */
-// const writeJSON = (json) => {
+const writeJSON = (json) => {
 
-//   if (!fs.existsSync("json")) {
-//     fs.mkdirSync("json");
-//   }
+  if (!fs.existsSync("json")) {
+    fs.mkdirSync("json");
+  }
 
-//   const data = JSON.stringify(json, null, 2);
-//   fs.writeFile('json/articles.json', data, (err) => {
-//     if (err) {
-//       throw err;
-//     }
-//     console.log("JSON data is saved.");
-//   });
-// }
+  const data = JSON.stringify(json, null, 2);
+  fs.writeFile('json/articles.json', data, (err) => {
+    if (err) {
+      throw err;
+    }
+    console.log("JSON data is saved.");
+  });
+}
 
 
 module.exports = async function () {
