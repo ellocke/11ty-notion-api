@@ -1,28 +1,20 @@
 ---
-siteTitle: 11ty & Notion API (beta) as Headless CMS
+siteTitle: 11ty & Notion API as Headless CMS
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ siteTitle }}</title>
     <link rel="stylesheet" href="https://unpkg.com/bamboo.css/dist/dark.min.css">
     <style>
 
-      /** bahunya tweaks */
-      body {
-        padding-left: 1rem;
-        padding-right: 1rem;
-      }
-
-      header nav {
+      header {
+        position: sticky;
+        top: 0;
         z-index: 1;
-      }
-
-      section {
-        width: 100%;
-        position: relative;
-        max-width: 900px;
+        background: var(--b-bg-1);
       }
 
       /** Notion / Eleventy specific */
@@ -57,19 +49,20 @@ siteTitle: 11ty & Notion API (beta) as Headless CMS
         padding-bottom: 56.25%;
         padding-top: 25px;
         height: 0;
+        margin-bottom: 3rem;
       }
 
       figure.youtube-wrapper iframe.youtube {
         position: absolute;
         top: 0;
         left: 0;
-        width: calc(100% - 3em);
-        height: calc(100% - 3em);
+        width: 100%;
+        height: 100%;
       }
 
       figure.youtube-wrapper figcaption {
         position: absolute;
-        bottom: 1.25rem;
+        bottom: -2rem;
       }
 
       .yellow {
@@ -110,7 +103,7 @@ siteTitle: 11ty & Notion API (beta) as Headless CMS
       </nav>
     </header>
     <blockquote>
-      <a href="https://fubits.notion.site/fubits/notion-cms-test-dbfab7a2a2bf476d96fb50222ff0c481">Notion Sources</a> | Articles: {{ articles.length | safe }}
+      <a href="https://fubits.notion.site/fubits/notion-cms-test-dbfab7a2a2bf476d96fb50222ff0c481">Notion Source</a> | <a href="https://gitlab.com/fubits/11ty-notion-api/">Repository</a> | Articles: {{ articles.length }}
     </blockquote>
 
     {% for article in articles %}
@@ -124,77 +117,87 @@ siteTitle: 11ty & Notion API (beta) as Headless CMS
         {% set listItemCounter = 0 %}
 
         {% for block in article.body %}
-
           {% switch block.block_type %}
-          {% case "heading_1" %}
-            <h2>
-              {% for elem in block.parsedText %}
-                {{- elem | safe -}}
-              {% endfor %}
-            </h2>
+
+            {% case "heading_1" %}
+              <h2>
+                {% for elem in block.parsedText %}
+                  {{- elem | safe -}}
+                {% endfor %}
+              </h2>
+
             {% case "heading_2" %}
               <h3>
                 {% for elem in block.parsedText %}
                   {{- elem | safe -}}
                 {% endfor %}
               </h3>
-              {% case "heading_3" %}
-                <h4>
+
+            {% case "heading_3" %}
+              <h4>
+                {% for elem in block.parsedText %}
+                  {{- elem | safe -}}
+                {% endfor %}
+              </h4>
+
+            {% case "paragraph" %}
+              <p>
+                {% for elem in block.parsedText %}
+                  {{- elem | safe -}}
+                {% endfor %}
+              </p>
+
+            {% case "bulleted_list_item" %}
+              {% if listItemCounter == 0 %}
+                <ul>
+              {% endif %}
+              {% set listItemCounter = listItemCounter + 1 %}
+                <li>
                   {% for elem in block.parsedText %}
                     {{- elem | safe -}}
                   {% endfor %}
-                </h4>
-                {% case "paragraph" %}
-                  <p>
-                    {% for elem in block.parsedText %}
-                      {{- elem | safe -}}
-                    {% endfor %}
-                  </p>
-                  {% case "bulleted_list_item" %}
-                    {% if listItemCounter == 0 %}
-                      <ul>
-                      {% endif %}
-                      {% set listItemCounter = listItemCounter + 1 %}
-                      <li>
-                        {% for elem in block.parsedText %}
-                          {{- elem | safe -}}
-                        {% endfor %}
-                      </li>
-                      {% if block.next_block_type != "bulleted_list_item" %}
-                        {% set listItemCounter = 0 %}
-                      </ul>
-                    {% endif %}
-                    {% case "numbered_list_item" %}
-                      {% if listItemCounter == 0 %}
-                        <ol>
-                        {% endif %}
-                        {% set listItemCounter = listItemCounter + 1 %}
-                        <li>
-                          {% for elem in block.parsedText %}
-                            {{- elem | safe -}}
-                          {% endfor %}
-                        </li>
-                        {% if block.next_block_type != "numbered_list_item" %}
-                          {% set listItemCounter = 0 %}
-                        </ol>
-                      {% endif %}
-                      {% case "to_do"%}
-                        <div>[to_do] {% for elem in block.parsedText %}
-                            {{- elem | safe -}}
-                          {% endfor %}
-                        </div>
-                        {% default %}
-                        <em>(ERROR - Uncaught Case - Type: {{- block.block_type -}})</em>
-                        {% for elem in block.parsedText %}
-                          <div>{{- elem | safe -}}</div>
-                        {% endfor %}
-                        {% endswitch %}
-                      {% endfor %}
-                    </section>
-                  {% endfor %}
+                </li>
+              {% if block.next_block_type != "bulleted_list_item" %}
+                {% set listItemCounter = 0 %}
+                </ul>
+              {% endif %}
 
-                  <footer>
-                    <a href="https://twitter.com/fubits">@fubits</a> | <a href="https://gitlab.com/fubits/11ty-notion-api">Gitlab</a> | <a href="https://kimeiga.github.io/bahunya/">Bahunya CSS</a>
-                  </footer>
-                </body>
-              </html>
+            {% case "numbered_list_item" %}
+              {% if listItemCounter == 0 %}
+                <ol>
+              {% endif %}
+              {% set listItemCounter = listItemCounter + 1 %}
+                <li>
+                  {% for elem in block.parsedText %}
+                    {{- elem | safe -}}
+                  {% endfor %}
+                </li>
+              {% if block.next_block_type != "numbered_list_item" %}
+                {% set listItemCounter = 0 %}
+                </ol>
+              {% endif %}
+
+            {% case "to_do" %}
+              <div>[to_do] {% for elem in block.parsedText %}
+                  {{- elem | safe -}}
+                {% endfor %}
+              </div>
+
+            {% default %}
+            {# catch unmatched block types and print ERROR #}
+              <em>(ERROR - Uncaught Case - Type: {{- block.block_type -}})</em>
+              {% for elem in block.parsedText %}
+                <div>{{- elem | safe -}}</div>
+              {% endfor %}
+
+          {% endswitch %}
+
+        {% endfor %}
+      </section>
+    {% endfor %}
+
+    <footer>
+      <a href="https://twitter.com/fubits">@fubits</a> | <a href="https://gitlab.com/fubits/11ty-notion-api">Gitlab</a> | <a href="https://github.com/rilwis/bamboo">Bamboo CSS</a>
+    </footer>
+  </body>
+</html>
