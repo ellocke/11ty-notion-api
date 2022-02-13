@@ -1,5 +1,8 @@
 # 11ty-notion-api
 
+> Last Update: 2022-02-13  
+> refactored; added native handling for image, todo, quote, callout, code
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/743e0288-f4c6-4ba0-9537-e74b2134cf95/deploy-status)](https://app.netlify.com/sites/11ty-notion-cms/deploys)
 
 **Current state**: [https://11ty-notion-cms.netlify.app/](https://11ty-notion-cms.netlify.app/)
@@ -27,3 +30,13 @@ Proof-of-concept for fetching pages / blocks from Notion (via official [Notion A
   - [x] `[footnote 'payload']` (as `<sup></sup>`)
 - [x] add formatting for Headings
 - [ ] figure out how to enable CSS edge cases such as `text-decoration: underline line-through`
+- [ ] implement more block types
+  - [x] implement `[code]`
+  - [x] implement `[todo]`
+  - [x] implement `[callout]`
+  - [x] implement `[quote]`
+  - [x] implement `[image]`
+    - [ ] add local caching / download
+  - [ ] implement `[video]`
+  - [ ] implement `[embed]`
+  - [ ] implement `[file]`
