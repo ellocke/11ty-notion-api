@@ -23,6 +23,8 @@ Proof-of-concept for fetching pages / blocks from Notion (via official [Notion A
 
 ## TODO
 
+- [ ] implement page retrieval
+- [ ] implement [database](https://developers.notion.com/reference/database) retrieval
 - [x] figure out how to wrap the parent-less list items in `<ul></ul>`
 - [x] implement shortcodes for
   - [x] `[blockquote 'payload']`
