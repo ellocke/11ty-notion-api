@@ -27,7 +27,7 @@ const parsePage = async (notion, page) => {
         false
       return parseBlock(block, nextType)
     })
-    .filter(block => block.text !== "[ERROR]")
+    .filter(block => block.text !== "[ERROR]" || block.isMedia)
 
   // console.log(blocksBody)
 
@@ -60,6 +60,11 @@ const parseBlock = (block, nextType) => {
 
   const isValid = block[block.type].text && block[block.type].text.length
 
+  // console.log(block.type, isValid)
+  // if (["image", "video"].includes(block.type)) {
+  //   console.log(block[block.type])
+  // }
+
   // isValid && console.log(block.type, nextType)
 
   const annotations = isValid && block[block.type].text
@@ -75,8 +80,17 @@ const parseBlock = (block, nextType) => {
       });
     })
 
+  const isMedia = ["image", "video"].includes(block.type) || false
+  // TODO: if image, download and store locally
+  // console.log(isMedia)
+  // isMedia && console.log(block.type)
+  // // isMedia && console.log(block[block.type])
+  // isMedia && console.log(block[block.type].caption[0].plain_text)
+  // isMedia && console.log(block[block.type].external.url)
+
   return {
     block_type: block.type || "[ERROR]",
+    isMedia: isMedia,
     text: isValid ? block[block.type].text.map(entry => entry.plain_text) : "[ERROR]",
     parsedText: isValid ? block[block.type].text.map(entry => parseText(entry)).flat() : "[ERROR]",
     annotations: annotations || false,
@@ -84,6 +98,8 @@ const parseBlock = (block, nextType) => {
     next_block_type: nextType || false,
     // raw_content: block[block.type] || "[ERROR]",
     // rest: block
+    url: isMedia ? block[block.type].external.url : false,
+    caption: isMedia ? block[block.type].caption[0].plain_text : false // TODO: parse rich text
   }
 }
 
@@ -150,9 +166,9 @@ const parseShortcode = (block) => {
   const shortcodeType = block.match(/\[(.*?)\s'(.*?)'\s?'?(.*?)?'?\]/) // 2 params + optional 3rd i.e. for figcaption
   // console.log(shortcodeType) // [full string, shortcode, payload, (figcaption)]
   switch (shortcodeType[1]) {
-    case "blockquote":
+    case "blockquote": // TODO: deprecate
       return `<blockquote>${shortcodeType[2]}</blockquote>`;
-    case "img":
+    case "img": // TODO: deprecate
       return `<figure><img src="${shortcodeType[2]}" alt="${shortcodeType[3]}"/><figcaption>${shortcodeType[3] || ""}</figcaption></figure>`;
     case "footnote":
       return `<sup>[${shortcodeType[2]}]</sup>`;

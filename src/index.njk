@@ -133,11 +133,39 @@ siteTitle: 11ty & Notion API as Headless CMS
                 </ol>
               {% endif %}
 
-            {% case "to_do" %}
-              <div>[to_do] {% for elem in block.parsedText %}
+            {% case "quote" %}
+            {% case "callout" %}
+              <blockquote>
+                {% for elem in block.parsedText %}
                   {{- elem | safe -}}
                 {% endfor %}
+              </blockquote>
+            
+            {% case "code" %}
+              <pre>{% for elem in block.parsedText %}
+                  {{- elem | safe -}}
+                {% endfor %}</pre>
+
+            {% case "to_do" %}
+              <div class="todo-item">
+                <input type="checkbox">
+                <label>[to_do] {% for elem in block.parsedText %}
+                    {{- elem | safe -}}
+                  {% endfor %}
+                </label>
               </div>
+
+            {% case "image" %}
+              <figure>
+                <img src="{{ block.url }}" alt="{{ block.caption }}">
+                <figcaption>{{ block.caption }}</figcaption>
+              </figure>
+
+            {% case "video" %}
+              <figure>
+                <video src="{{ block.url }}" alt="{{ block.caption }}"></video>
+                <figcaption>{{ block.caption }}</figcaption>
+              </figure>
 
             {% default %}
             {# catch unmatched block types and print ERROR #}

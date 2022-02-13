@@ -55,3 +55,13 @@
 .red {
   color: red;
 }
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  padding-left: 0.8rem;
+}
+
+.todo-item input {
+  margin-right: 0.5rem;
+}
