@@ -10,10 +10,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@11ty/eleventy": "^0.12.1",
+    "@11ty/eleventy": "^1.0.0",
     "@11ty/eleventy-cache-assets": "^2.3.0",
-    "@notionhq/client": "^0.2.3",
+    "@notionhq/client": "^0.4.13",
     "classnames": "^2.3.1",
-    "dotenv": "^10.0.0"
+    "dotenv": "^16.0.0"
   }
 }
