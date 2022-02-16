@@ -21,6 +21,16 @@ Proof-of-concept for fetching pages / blocks from Notion (via official [Notion A
   - add `MAIN_PAGE="id-of-root-page"` (will probably switch to root DB soon-ish)
 - `npm run dev`
 
+## Approach
+
+1. `src/_data/database.js`: Fetch ~~pages~~ database entries from Notion
+
+   - `.cache/**`: cache locally
+   - `json/articles.json`: store / track locally (optional)
+
+2. `utils/parsePage.js`: Process the blocks (of `type: supported` or with custom `[shortcodes]`)]) with JS
+3. `src/index.njk`: Render / parse the blocks with Eleventy
+
 ## TODO
 
 - [ ] implement page retrieval
