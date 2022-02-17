@@ -18,8 +18,10 @@ Proof-of-concept for fetching pages / blocks from Notion (via official [Notion A
 - `npm install`
 - create `.env` for `{dotenv}`
   - add `NOTION_API_KEY="your_token"`
-  - add `MAIN_PAGE="id-of-root-page"` (will probably switch to root DB soon-ish)
+  - add `MAIN_PAGE="id-of-notion-database"`
 - `npm run dev`
+
+> also add both ENV variables to the Deploy Settings on Netlify
 
 ## Approach
 
