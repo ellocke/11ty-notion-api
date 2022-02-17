@@ -7,14 +7,15 @@
 
 **Current state**: [https://11ty-notion-cms.netlify.app/](https://11ty-notion-cms.netlify.app/)
 
-Proof-of-concept for fetching pages / blocks from Notion (via official [Notion API beta](https://developers.notion.com/changelog)) with the Eleventy static website builder's global data functionality.
+Proof-of-concept for fetching pages / blocks from Notion (via official [Notion API beta](https://developers.notion.com/changelog)) with the Eleventy static website builder's global data functionality. Idea is to use this approach to build static websites from a Notion database as a content-rich headless CMS.
 
 ![](https://pbs.twimg.com/media/E8dX4i5WUAcLcQL?format=png&name=4096x4096)
 
-> ~~See the [Notion Source Documents](https://fubits.notion.site/fubits/Notion-CMS-Test-dbfab7a2a2bf476d96fb50222ff0c481)~~
+> See the [Notion Source Document](https://fubits.notion.site/Notion-CMS-DB-Eleventy-3f2bdcd9db7d4264bd2bed28c2b67655)
 
 ## Quickstart
 
+- `git clone`
 - `npm install`
 - create `.env` for `{dotenv}`
   - add `NOTION_API_KEY="your_token"`
@@ -23,7 +24,7 @@ Proof-of-concept for fetching pages / blocks from Notion (via official [Notion A
 
 > also add both ENV variables to the Deploy Settings on Netlify
 
-## Approach
+## Building Blocks
 
 1. `src/_data/database.js`: Fetch ~~pages~~ database entries (~pages) from Notion
 
@@ -32,6 +33,7 @@ Proof-of-concept for fetching pages / blocks from Notion (via official [Notion A
 
 2. `utils/parsePage.js`: Process the blocks (of `type: supported` or with custom `[shortcodes]`)]) with JS
 3. `src/index.njk`: Render / parse the blocks with Eleventy
+4. `src/css/notion.css`: Notion-specific CSS rules (i.e. colors)
 
 ## TODO
 
@@ -39,11 +41,11 @@ Proof-of-concept for fetching pages / blocks from Notion (via official [Notion A
 - [ ] abandon `{{- elem | safe -}}`
 - [ ] implement [database](https://developers.notion.com/reference/database) retrieval
   - [ ] implement page / db entry metadata (front matter)
-- Eleventy: use a blog template / logic
+- [ ] Eleventy: use a blog template / logic
 - [x] figure out how to wrap the parent-less list items in `<ul></ul>`
 - [x] implement shortcodes for
-  - [x] `[blockquote 'payload']`
-  - [x] `[img 'url' 'figcaption']`
+  - [x] `[blockquote 'payload']` (now obsolete)
+  - [x] `[img 'url' 'figcaption']` (now obsolete)
   - [x] `[footnote 'payload']` (as `<sup></sup>`)
 - [x] add formatting for Headings
 - [ ] figure out how to enable CSS edge cases such as `text-decoration: underline line-through`
@@ -57,4 +59,4 @@ Proof-of-concept for fetching pages / blocks from Notion (via official [Notion A
   - [ ] implement `[video]`
   - [ ] implement `[embed]`
   - [ ] implement `[file]`
-  - [ ] implement hyperlinks
+  - [ ] implement internal hyperlinks (within website)
