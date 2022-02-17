@@ -1,12 +1,12 @@
 ---
-siteTitle: 11ty & Notion API as Headless CMS
+pageTitle: Eleventy (11ty) & Notion API as Headless CMS
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ siteTitle }}</title>
+    <title>{{ pageTitle }}</title>
     <link rel="stylesheet" href="/css/bamboo.dark.min.css">
     <link rel="stylesheet" href="/css/notion.css">
     <style>
@@ -54,13 +54,15 @@ siteTitle: 11ty & Notion API as Headless CMS
     <header>
       <nav>
         <h1>
-          <a href="#">{{siteTitle}}</a>
+          <a href="#">{{pageTitle}}</a>
         </h1>
       </nav>
     </header>
     <blockquote>
       <a href="https://fubits.notion.site/fubits/notion-cms-test-dbfab7a2a2bf476d96fb50222ff0c481">Notion Source</a> | <a href="https://gitlab.com/fubits/11ty-notion-api/">Repository</a> | Articles: {{ articles.length }}
     </blockquote>
+    <blockquote>v2: uses Notion database instead of a root page as parent</blockquote>
+
 
     {% for article in articles %}
       <hr>
@@ -68,7 +70,7 @@ siteTitle: 11ty & Notion API as Headless CMS
         <h1>Title: {{ article.title }}</h1>
         <h3>Subtitle: {{ article.subtitle }}</h3>
         <blockquote>
-          <span>Date: {{ article.authors }}</span> - <span>Authors: {{ article.date }}</span></blockquote>
+          <span>Date: {{ article.date }}</span> | <span>Authors: {{ article.authors }}</span></blockquote>
 
         {% set listItemCounter = 0 %}
 
@@ -158,13 +160,21 @@ siteTitle: 11ty & Notion API as Headless CMS
             {% case "image" %}
               <figure>
                 <img src="{{ block.url }}" alt="{{ block.caption }}">
-                <figcaption>{{ block.caption }}</figcaption>
+                <figcaption>
+                  {% for elem in block.caption %}
+                    {{- elem | safe -}}
+                  {% endfor %}
+                </figcaption>
               </figure>
 
             {% case "video" %}
               <figure>
                 <video src="{{ block.url }}" alt="{{ block.caption }}"></video>
-                <figcaption>{{ block.caption }}</figcaption>
+                <figcaption>
+                  {% for elem in block.caption %}
+                    {{- elem | safe -}}
+                  {% endfor %}
+                </figcaption>
               </figure>
 
             {% default %}
@@ -181,7 +191,7 @@ siteTitle: 11ty & Notion API as Headless CMS
     {% endfor %}
 
     <footer>
-      <a href="https://twitter.com/fubits">@fubits</a> | <a href="https://gitlab.com/fubits/11ty-notion-api">Gitlab</a> | <a href="https://github.com/rilwis/bamboo">Bamboo CSS</a>
+      <a href="https://twitter.com/fubits">@fubits</a> | <a href="https://gitlab.com/fubits/11ty-notion-api">Gitlab Repo</a> | CSS: <a href="https://github.com/rilwis/bamboo">Bamboo CSS</a>
     </footer>
   </body>
 </html>

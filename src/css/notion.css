@@ -20,6 +20,11 @@
   font-family: monospace;
 }
 
+/* COLORS */
+/** for official NOTION colors, see
+ *  https: //docs.super.so/notion-colors
+ */
+
 .yellow {
   color: yellow;
 }
@@ -54,6 +59,42 @@
 
 .red {
   color: red;
+}
+
+.gray-bg {
+  background-color: gray;
+}
+
+.brown-bg {
+  background-color: brown;
+}
+
+.orange-bg {
+  background-color: orange;
+}
+
+.yellow-bg {
+  background-color: yellow;
+}
+
+.green-bg {
+  background-color: green;
+}
+
+.blue-bg {
+  background-color: blue;
+}
+
+.purple-bg {
+  background-color: purple;
+}
+
+.pink-bg {
+  background-color: pink;
+}
+
+.red-bg {
+  background-color: red;
 }
 
 .todo-item {

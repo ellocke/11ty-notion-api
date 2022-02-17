@@ -1,19 +1,28 @@
 {
-  "name": "eleventy-minimal",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "eleventy-notion-api-headless-cms",
+  "version": "0.2.0",
+  "author": "@fubits",
+  "license": "MIT",
+  "description": "Proof of concept for using Notion and the Notion API as a headless CMS with Eleventy (11ty)",
+  "main": ".eleventy.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "rm -rf _site && eleventy --serve --port=3000"
+    "build": "rm -rf _site && eleventy",
+    "clean": "rm -rf _site && rm -rf .cache/** && rm -rf json/**",
+    "dev": "rm -rf _site && eleventy --serve --port=3000",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@11ty/eleventy": "^1.0.0",
     "@11ty/eleventy-cache-assets": "^2.3.0",
     "@notionhq/client": "^0.4.13",
     "classnames": "^2.3.1",
     "dotenv": "^16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/fubits/11ty-notion-api.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/fubits/11ty-notion-api/-/issues"
   }
 }

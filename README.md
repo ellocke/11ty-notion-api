@@ -1,7 +1,7 @@
 # 11ty-notion-api
 
-> Last Update: 2022-02-13  
-> refactored; added native handling for image, todo, quote, callout, code
+> Last Update: 2022-02-16  
+> switched to database approach instead of parent root page
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/743e0288-f4c6-4ba0-9537-e74b2134cf95/deploy-status)](https://app.netlify.com/sites/11ty-notion-cms/deploys)
 
@@ -11,7 +11,7 @@ Proof-of-concept for fetching pages / blocks from Notion (via official [Notion A
 
 ![](https://pbs.twimg.com/media/E8dX4i5WUAcLcQL?format=png&name=4096x4096)
 
-> See the [Notion Source Documents](https://fubits.notion.site/fubits/Notion-CMS-Test-dbfab7a2a2bf476d96fb50222ff0c481)
+> ~~See the [Notion Source Documents](https://fubits.notion.site/fubits/Notion-CMS-Test-dbfab7a2a2bf476d96fb50222ff0c481)~~
 
 ## Quickstart
 
@@ -23,7 +23,7 @@ Proof-of-concept for fetching pages / blocks from Notion (via official [Notion A
 
 ## Approach
 
-1. `src/_data/database.js`: Fetch ~~pages~~ database entries from Notion
+1. `src/_data/database.js`: Fetch ~~pages~~ database entries (~pages) from Notion
 
    - `.cache/**`: cache locally
    - `json/articles.json`: store / track locally (optional)
@@ -33,8 +33,11 @@ Proof-of-concept for fetching pages / blocks from Notion (via official [Notion A
 
 ## TODO
 
-- [ ] implement page retrieval
+- [x] implement page retrieval
+- [ ] abandon `{{- elem | safe -}}`
 - [ ] implement [database](https://developers.notion.com/reference/database) retrieval
+  - [ ] implement page / db entry metadata (front matter)
+- Eleventy: use a blog template / logic
 - [x] figure out how to wrap the parent-less list items in `<ul></ul>`
 - [x] implement shortcodes for
   - [x] `[blockquote 'payload']`
@@ -52,3 +55,4 @@ Proof-of-concept for fetching pages / blocks from Notion (via official [Notion A
   - [ ] implement `[video]`
   - [ ] implement `[embed]`
   - [ ] implement `[file]`
+  - [ ] implement hyperlinks
