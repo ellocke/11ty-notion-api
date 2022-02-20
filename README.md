@@ -9,6 +9,8 @@
 
 Proof-of-concept for fetching pages / blocks from Notion (via official [Notion API beta](https://developers.notion.com/changelog)) with the Eleventy static website builder's global data functionality. Idea is to use this approach to build static websites from a Notion database as a content-rich headless CMS.
 
+> For a slightly different / more elegant approach for processing the blocks (with `getBlock()`) and local asset caching, see @FalconSensei's [post](https://geekosaur.com/post/eleventy-notion-notes-section/).
+
 ![](https://pbs.twimg.com/media/E8dX4i5WUAcLcQL?format=png&name=4096x4096)
 
 > See the [Notion Source Document](https://fubits.notion.site/Notion-CMS-DB-Eleventy-3f2bdcd9db7d4264bd2bed28c2b67655)
